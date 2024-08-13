@@ -1,5 +1,6 @@
 // const express = require('express'); // load express
 import "dotenv/config";
+import session from "express-session";
 import express from "express";
 import Hello from "./hello.js";
 import Lab5 from "./Lab5/index.js";
@@ -11,8 +12,6 @@ import ModuleRoutes from "./Kanbas/Modules/routes.js";
 
 //may have to change where this lives...
 import CourseRoutes from "./Kanbas/Courses/routes.js";
-
-import session from "express-session";
 
 //import library
 import mongoose from "mongoose";
@@ -33,12 +32,12 @@ app.use(
     })
 );
 
-//sets up a session
 const sessionOptions = {
     secret: process.env.SESSION_SECRET || "kanbas",
     resave: false,
     saveUninitialized: false,
 };
+
 if (process.env.NODE_ENV !== "development") {
     //telling server to trust middle man
     sessionOptions.proxy = true;
@@ -52,18 +51,13 @@ if (process.env.NODE_ENV !== "development") {
 }
 app.use(session(sessionOptions));
 
-
-
 app.use(express.json());
 // ALL ADDITIONAL WORK COMES AFTER THIS LINE
-CourseRoutes(app);
-
-ModuleRoutes(app);
-AssignmentRoutes(app);
-
 Hello(app);
 Lab5(app);
 UserRoutes(app);
 CourseRoutes(app);
+ModuleRoutes(app);
+AssignmentRoutes(app);
 
 app.listen(4000);       // listen at port 4000
